@@ -1,6 +1,7 @@
 package com.carlos.infnet.product_service.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.carlos.infnet.product_service.model.Product;
@@ -14,7 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.*;
 
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/")
 @Tag(name = "Product API", description = "API para gerenciar produtos")
 public class ProductController {
 
@@ -25,9 +26,10 @@ public class ProductController {
     @Operation(summary = "Criar um novo produto", description = "Cria um novo produto e retorna o produto criado")
     @ApiResponse(responseCode = "201", description = "Produto criado com sucesso")
     @ApiResponse(responseCode = "400", description = "Solicitação inválida")
-    public Product create(
+    public ResponseEntity<?> create(
         @RequestBody @Parameter(description = "Produto a ser criado com categoria (category_id)") Product product) {
-        return productService.create(product);
+            Product saved = productService.create(product);
+            return ResponseEntity.ok(saved);
     }
 
     @GetMapping("/product")

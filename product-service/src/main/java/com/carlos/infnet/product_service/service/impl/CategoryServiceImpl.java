@@ -20,6 +20,11 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Override
+    public Category create(Category category) {
+        return categoryRepository.save(category);
+    }
+
+    @Override
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
@@ -29,10 +34,4 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryRepository.findById(id);
     }
     
-    @Override
-    public List<Product> findProductsByCategory(Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Categoria não encontrada"));
-        return category.getProducts();
-    }
 }

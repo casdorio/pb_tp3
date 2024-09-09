@@ -46,6 +46,10 @@ public class ProducServiceImpl implements ProductService {
         return productRepository.findById(id).map(product -> {
             product.setName(productAlterado.getName());
             product.setDescription(productAlterado.getDescription());
+            product.setCountry(productAlterado.getCountry());
+            product.setPrice(productAlterado.getPrice());
+            product.setIdCategory(productAlterado.getIdCategory());
+            product.setStock(productAlterado.getStock());
             return productRepository.save(product);
         }).orElseGet(() -> {
             productAlterado.setId(id);

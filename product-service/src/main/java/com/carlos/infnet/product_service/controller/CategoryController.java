@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,16 +16,30 @@ import com.carlos.infnet.product_service.service.CategoryService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/api/public")
+@RequestMapping("/")
 @Tag(name = "Category API", description = "API para gerenciar categorias")
+@Slf4j
 public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
+
+
+    @PostMapping("/category")
+    @Operation(summary = "Criar um nova categoria", description = "Cria um nova categoria e retorna o produto criado")
+    @ApiResponse(responseCode = "201", description = "categoria criado com sucesso")
+    @ApiResponse(responseCode = "400", description = "Solicitação inválida")
+    public Category create(
+        @RequestBody @Parameter(description = "Categoria a ser criado") Category category) {
+            log.info("Creating category: {}", category);
+        return categoryService.create(category);
+    }
 
     @GetMapping("/category")
     @Operation(summary = "Listar todas as categorias", description = "Retorna uma lista de todas as categorias disponíveis")
@@ -41,12 +56,12 @@ public class CategoryController {
         return categoryService.findById(id);
     }
 
-    @GetMapping("/category/{id}/products")
-    @Operation(summary = "Listar produtos por categoria", description = "Retorna uma lista de produtos relacionados a uma categoria específica")
-    @ApiResponse(responseCode = "200", description = "Produtos da categoria retornados com sucesso")
-    @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
-    public List<Product> getProductsByCategory(
-        @PathVariable @Parameter(description = "ID da categoria cujos produtos devem ser retornados") Long categoryId) {
-        return categoryService.findProductsByCategory(categoryId);
-    }
+    // @GetMapping("/category/{id}/products")
+    // @Operation(summary = "Listar produtos por categoria", description = "Retorna uma lista de produtos relacionados a uma categoria específica")
+    // @ApiResponse(responseCode = "200", description = "Produtos da categoria retornados com sucesso")
+    // @ApiResponse(responseCode = "404", description = "Categoria não encontrada")
+    // public List<Product> getProductsByCategory(
+    //     @PathVariable @Parameter(description = "ID da categoria cujos produtos devem ser retornados") Long categoryId) {
+    //     return categoryService.findProductsByCategory(categoryId);
+    // }
 }
